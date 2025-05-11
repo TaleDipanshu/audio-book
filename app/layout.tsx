@@ -3,7 +3,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Audio book App',
-  description: 'Created with v0',
+  description: 'audio book ',
   generator: 'v0.dev',
 }
 
