@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && mkdir -p dist && cp manifest.json dist/ && cp -r public/* dist/ && cp -r .next/static dist/_next/static",
+    "build": "next build && mkdir -p dist/_next/static && cp manifest.json dist/ && cp -r public/* dist/ && cp -r .next/static dist/_next/static",
     "export": "next export"
   },
   "dependencies": {
