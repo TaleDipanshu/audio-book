@@ -2,6 +2,9 @@
 
 export async function generateSpeech(input: string) {
   try {
+    // Start timing the operation
+    const startTime = Date.now();
+
     if (!process.env.GROQ_API_KEY) {
       console.error("GROQ_API_KEY is not set in the environment variables.");
       return { error: "Server configuration error: API key is missing." };
@@ -33,7 +36,16 @@ export async function generateSpeech(input: string) {
     // Convert the ArrayBuffer to a base64 string
     const base64Audio = Buffer.from(audioBuffer).toString("base64")
 
-    return { audioBase64: base64Audio }
+    // Calculate elapsed time in seconds
+    const elapsedTime = (Date.now() - startTime) / 1000;
+
+    return { 
+      audioBase64: base64Audio,
+      timing: {
+        elapsedSeconds: elapsedTime,
+        inputLength: input.length
+      }
+    }
   } catch (error) {
     console.error("Error generating speech:", error)
     return { error: "Failed to generate speech. Please try again." }

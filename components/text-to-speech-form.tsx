@@ -14,6 +14,16 @@ export function TextToSpeechForm() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const [timing, setTiming] = useState<{ elapsedSeconds: number; inputLength: number } | null>(null)
+
+  // Sample paragraphs for quick testing
+  const sampleTexts = [
+    "Welcome to the audio book generator. This tool converts your text into natural-sounding speech that you can listen to or download for later use.",
+    "The quick brown fox jumps over the lazy dog. This pangram contains all the letters of the English alphabet.",
+    "In a world of digital content, having the ability to convert text to speech opens up new possibilities for accessibility and convenience.",
+    "Once upon a time, in a forest far away, there lived a wise old owl who would share stories with all the woodland creatures each evening under the moonlight.",
+    "Artificial intelligence continues to transform how we interact with technology, making experiences more natural and intuitive for users around the world."
+  ]
 
   // Clean up URLs when component unmounts
   useEffect(() => {
@@ -30,6 +40,7 @@ export function TextToSpeechForm() {
 
     setIsGenerating(true);
     setError(null);
+    setTiming(null);
 
     // Clean up previous audio URL if it exists
     if (audioUrl) {
@@ -65,6 +76,12 @@ export function TextToSpeechForm() {
           setAudioBlob(blob);
           const url = URL.createObjectURL(blob);
           setAudioUrl(url);
+          
+          // Set timing information if available
+          if (result.timing) {
+            setTiming(result.timing);
+          }
+          
           window.dispatchEvent(new CustomEvent("audioGenerated"));
         }
       }
@@ -78,6 +95,10 @@ export function TextToSpeechForm() {
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value)
+  }
+
+  const handleSampleClick = (sample: string) => {
+    setText(sample);
   }
 
   const handleDownload = () => {
@@ -105,6 +126,24 @@ export function TextToSpeechForm() {
             onChange={handleTextChange}
             className="min-h-[120px] bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
           />
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-sm text-white-500"> paragraphs:</p>
+          <div className="flex flex-wrap gap-2">
+            {sampleTexts.map((sample, index) => (
+              <Button
+                key={index}
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleSampleClick(sample)}
+                className="text-xs border-blue-300 text-gray-800 hover:bg-blue-500"
+              >
+                Text {index + 1}
+              </Button>
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-4 items-center">
@@ -143,6 +182,17 @@ export function TextToSpeechForm() {
         </div>
 
         {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
+        
+        {timing && (
+          <div className="text-cyan-400 text-sm mt-2">
+            Generation time: {timing.elapsedSeconds.toFixed(2)} seconds
+            {timing.inputLength && (
+              <span className="ml-2">
+                ({(timing.inputLength / timing.elapsedSeconds).toFixed(1)} characters/second)
+              </span>
+            )}
+          </div>
+        )}
       </form>
     </div>
   )
