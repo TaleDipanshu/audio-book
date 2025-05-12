@@ -1,5 +1,5 @@
 import { TextToSpeechForm } from "@/components/text-to-speech-form"
-import { AudioVisualizer } from "@/components/audio-visualizer"
+import { AudioTranscriber } from "@/components/audio-transcriber"
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
 
         <div className="max-w-3xl mx-auto">
           <TextToSpeechForm />
-          <AudioVisualizer />
+          <AudioTranscriber />
         </div>
       </div>
     </main>
